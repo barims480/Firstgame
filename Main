@@ -1,35 +1,35 @@
 import pygame
 import random
 
-# Initialize Pygame
+
 pygame.init()
 
-# Screen setup
+
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Avoid the Enemy")
 
-# Colors
+
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 
-# Player settings
+
 player_size = 50
 player_x = WIDTH // 2
 player_y = HEIGHT - player_size - 10
 speed = 5
 
-# Enemy settings
+
 enemy_size = 50
 enemies = [{"x": random.randint(0, WIDTH - enemy_size), "y": 0, "speed": 5}]
 
-# Score setup
+
 score = 0
 last_score = 5  # Track when last enemy was added
 font = pygame.font.Font(None, 36)
 
-# Game loop
+
 running = True
 while running:
     pygame.time.delay(30)
@@ -38,24 +38,24 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Move player
+  
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and player_x > 0:
         player_x -= speed
     if keys[pygame.K_RIGHT] and player_x < WIDTH - player_size:
         player_x += speed
 
-    # Adjust difficulty (increase speed if score is 5 or more)
+    
     for enemy in enemies:
         enemy["speed"] = 8 if score >= 5 else 5
 
 
-    # Add more enemies after score reaches 5
+   
     if score >= 5 and score > last_score:
         enemies.append({"x": random.randint(0, WIDTH - enemy_size), "y": 0, "speed": 8})
         last_score = score  # Update last score where enemy was added
 
-    # Move enemies
+  
     for enemy in enemies:
         enemy["y"] += enemy["speed"]
         if enemy["y"] > HEIGHT:  # Reset enemy when it reaches the bottom
@@ -63,7 +63,7 @@ while running:
             enemy["x"] = random.randint(0, WIDTH - enemy_size)
             score += 1  # Increase score when enemy resets
 
-    # Collision detection
+
     player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
     for enemy in enemies:
         enemy_rect = pygame.Rect(enemy["x"], enemy["y"], enemy_size, enemy_size)
@@ -71,13 +71,13 @@ while running:
             print("Game Over! Final Score:", score)
             running = False
 
-    # Draw everything
+  
     screen.fill(WHITE)
     pygame.draw.rect(screen, BLUE, (player_x, player_y, player_size, player_size))
     for enemy in enemies:
         pygame.draw.rect(screen, RED, (enemy["x"], enemy["y"], enemy_size, enemy_size))
 
-    # Draw score
+   
     score_text = font.render(f"Score: {score}", True, (0, 0, 0))
     screen.blit(score_text, (10, 10))
 
